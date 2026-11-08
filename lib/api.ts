@@ -1,3 +1,4 @@
+import {voiceApi,ensureVoice,VoiceError} from './voice';
 import { env } from 'cloudflare:workers';
 import { authenticatedMember, authRoute, AuthError } from './password-auth';
 import { seed } from './seed';
@@ -37,9 +38,9 @@ async function handleInternal(request:Request){
   if(!['GET','HEAD'].includes(method)){
    const origin=request.headers.get('origin');if(origin&&origin!==new URL(request.url).origin&&origin!=='https://hyosang-ryu.github.io')throw new ApiError(403,'허용되지 않은 요청입니다.');
    if(!(['photos','activities'].includes(path[0])&&method==='PUT')&&!request.headers.get('content-type')?.includes('application/json'))throw new ApiError(415,'JSON 요청이 필요합니다.');
-   if(Number(request.headers.get('content-length')||0)>(['photos','activities'].includes(path[0])?5*1024*1024:20000))throw new ApiError(413,'요청이 너무 큽니다.');
+   if(Number(request.headers.get('content-length')||0)>(['photos','activities'].includes(path[0])?5*1024*1024:path[0]==='voice'?100000:20000))throw new ApiError(413,'요청이 너무 큽니다.');
   }
-  let body:any={};if(!['GET','HEAD'].includes(method)&&!(['photos','activities'].includes(path[0])&&method==='PUT')){let raw=await request.text();if(raw.length>20000)throw new ApiError(413,'요청이 너무 큽니다.');try{body=JSON.parse(raw);if(!body||typeof body!=='object'||Array.isArray(body))throw Error('invalid body')}catch{throw new ApiError(400,'요청 내용을 확인해 주세요.')}}
+  let body:any={};if(!['GET','HEAD'].includes(method)&&!(['photos','activities'].includes(path[0])&&method==='PUT')){let raw=await request.text();if(raw.length>(path[0]==='voice'?100000:20000))throw new ApiError(413,'요청이 너무 큽니다.');try{body=JSON.parse(raw);if(!body||typeof body!=='object'||Array.isArray(body))throw Error('invalid body')}catch{throw new ApiError(400,'요청 내용을 확인해 주세요.')}}
   if((path[0]==='session'&&method==='GET')||(path[0]==='auth'&&path[1]==='login'&&method==='POST'))await ensureTestAccounts(db);
   const auth=await authRoute(db,request,path,body);if(auth)return auth;
   const viewer=await authenticatedMember(db,request);
@@ -56,6 +57,7 @@ async function handleInternal(request:Request){
   const patient=async(id:unknown)=>{const pid=text(id,20);if(actor.role!=='staff'&&!actor.patientIds.includes(pid))throw new ApiError(403,'담당 환자의 정보만 확인할 수 있습니다.');const p=await db.prepare('SELECT id FROM patients WHERE id=?').bind(pid).first();if(!p)throw new ApiError(404,'환자를 찾을 수 없습니다.');return pid};
   const event=(action:string,id:string)=>db.prepare('INSERT INTO audit_events (id,actor,action,entity_id,created_at) VALUES (?,?,?,?,?)').bind(crypto.randomUUID(),actor.name,action,id,now());
   const idem=()=>text(request.headers.get('Idempotency-Key'),100);
+  if(path[0]==='voice')return await voiceApi(request,path,body,actor,env);
   if(path[0]==='photos'&&path[1]){
    const pid=await patient(path[1]);const asset=path[2]||'portrait';if(method==='GET'&&asset.startsWith('registered-')){
     const fileId=asset.slice(11);const row=await db.prepare("SELECT f.id,f.content_type FROM activity_files f JOIN activity_events e ON e.id=f.event_id JOIN activity_participants p ON p.event_id=e.id WHERE f.id=? AND p.patient_id=? AND e.status='published'").bind(fileId,pid).first<any>();
@@ -148,13 +150,14 @@ async function handleInternal(request:Request){
    }
   }
   if(path[0]==='state'&&method==='GET'){
+   await ensureVoice(db);
    const params=actor.role==='staff'?[]:actor.patientIds;
    const placeholders=params.map(()=>'?').join(',')||'NULL';
    const patientWhere=actor.role==='staff'?'':` WHERE id IN (${placeholders})`;
    const p=await db.prepare('SELECT * FROM patients'+patientWhere+' ORDER BY room').bind(...params).all();
    const scope=actor.role==='staff'?'':` AND patient_id IN (${placeholders})`;
    const l=await db.prepare(`SELECT * FROM care_logs WHERE 1=1 ${actor.role==='staff'?'':"AND status='published'"}${scope} ORDER BY created_at DESC,id DESC LIMIT 500`).bind(...params).all();
-   const m=await db.prepare(`SELECT m.*,EXISTS(SELECT 1 FROM message_reads r WHERE r.message_id=m.id AND r.persona IN (SELECT id FROM app_users WHERE status='active' AND ((m.sender_role='staff' AND role='family') OR (m.sender_role='family' AND role IN ('staff','admin'))))) AS read_by_other FROM messages m WHERE 1=1${scope.replace('patient_id','m.patient_id')} ORDER BY m.created_at DESC,m.id DESC LIMIT 500`).bind(...params).all();
+   const m=await db.prepare(`SELECT m.*,EXISTS(SELECT 1 FROM message_reads r WHERE r.message_id=m.id AND r.persona IN (SELECT id FROM app_users WHERE status='active' AND ((m.sender_role='staff' AND role='family') OR (m.sender_role='family' AND role IN ('staff','admin'))))) AS read_by_other FROM messages m WHERE NOT EXISTS(SELECT 1 FROM voice_encounters v WHERE v.message_id=m.id AND v.share_active=0)${scope.replace('patient_id','m.patient_id')} ORDER BY m.created_at DESC,m.id DESC LIMIT 500`).bind(...params).all();
    const b=await db.prepare(`SELECT * FROM bookings WHERE 1=1${scope} ORDER BY date DESC,time DESC LIMIT 200`).bind(...params).all();
    const a=actor.role==='staff'?await db.prepare('SELECT * FROM audit_events ORDER BY created_at DESC LIMIT 30').all():{results:[]};
    return json({actor,patients:p.results,logs:l.results,activities:[...await registeredActivities(db,actor.role==='staff'?null:params),...activityPhotos.filter(photo=>p.results.some(patient=>patient.id===photo.patient_id))],messages:[...m.results].reverse(),bookings:b.results,audit:a.results,serverTime:now(),synthetic:true});
@@ -199,5 +202,5 @@ async function handleInternal(request:Request){
    const result=await db.prepare('UPDATE bookings SET status=?,updated_at=? WHERE id=? AND status=?').bind(status,now(),b.id,b.status).run();if(!result.meta.changes)throw new ApiError(409,'예약 상태가 변경되었습니다. 새로 확인해 주세요.');await event('면회 '+({approved:'승인',rejected:'반려',cancelled:'취소'}[status]),b.id).run();return json({ok:true});
   }
   throw new ApiError(404,'요청한 기능을 찾을 수 없습니다.');
- }catch(e){if(e instanceof ApiError||e instanceof AuthError)return json({error:e.message},e.status);console.error('API failure',e);return json({error:'서버 처리에 실패했습니다. 잠시 후 다시 시도해 주세요.'},500)}
+ }catch(e){if(e instanceof ApiError||e instanceof AuthError||e instanceof VoiceError)return json({error:e.message},e.status);console.error('API failure',e);return json({error:'서버 처리에 실패했습니다. 잠시 후 다시 시도해 주세요.'},500)}
 }

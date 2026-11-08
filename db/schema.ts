@@ -57,3 +57,9 @@ export const activityParticipants=sqliteTable('activity_participants',{
 export const activityFiles=sqliteTable('activity_files',{
  id:text('id').primaryKey(),eventId:text('event_id').notNull().references(()=>activityEvents.id),contentType:text('content_type').notNull(),createdAt:text('created_at').notNull()
 });
+export const voiceEncounters=sqliteTable('voice_encounters',{
+ id:text('id').primaryKey(),patientId:text('patient_id').notNull().references(()=>patients.id),author:text('author').notNull(),status:text('status').notNull(),transcript:text('transcript').notNull().default(''),note:text('note'),familyText:text('family_text').notNull().default(''),evidence:text('evidence').notNull().default(''),revision:integer('revision').notNull().default(1),execution:text('execution').notNull(),createdAt:text('created_at').notNull(),approvedAt:text('approved_at'),reviewedBy:text('reviewed_by'),requestKey:text('request_key').notNull().unique(),generationKey:text('generation_key'),approvalId:text('approval_id'),messageId:text('message_id'),shareActive:integer('share_active').notNull().default(0)
+});
+export const voiceTickets=sqliteTable('voice_tickets',{
+ tokenHash:text('token_hash').primaryKey(),encounterId:text('encounter_id').notNull(),userId:text('user_id').notNull(),sessionHash:text('session_hash').notNull(),expiresAt:text('expires_at').notNull()
+});
