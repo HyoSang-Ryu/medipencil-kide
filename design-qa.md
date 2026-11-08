@@ -25,6 +25,7 @@ Files under ignored `outputs/spacing-qa/`:
 - P2: vital preset buttons wrapped into three tall rows. Restored compact equal-width inline controls on desktop, 44px touch height on phones. Measurement values use the original headline-sm token.
 - P2: family gutters/cards were homogenized. Restored 16px gutters for home/messages and 24px for log/profile/visit; 24px or 16px card padding and 12px radii. Log cards regain their full-width tinted footer.
 - P2: family quick actions were all stacked. Restored one full-width primary row and a pair of equal secondary buttons; source visit submit height is 56px.
+- P2 follow-up: family desktop header still used the legacy 36px offset for a taller account strip. Tied header position to an explicit 48px desktop / 64px mobile strip, retaining safe-area handling.
 - P1 follow-up: visit choices were nested in a second 24px padded white card. Removed that redundant wrapper styling; final 390px view has 342px choices and 24px outer gutters. 320px view remains within the viewport. Rechecked final normalized screenshots.
 
 ## Five fidelity surfaces

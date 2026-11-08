@@ -253,3 +253,12 @@ body.family[data-screen="8"] #app .visit-summary .family-portrait{grid-row:1}
 body.family[data-screen="8"] #app{padding-top:0}
 body.family[data-screen="8"] #app .visit-heading{position:sticky;top:calc(var(--family-session-height,36px) + 64px);z-index:35;min-height:60px;margin:0 -24px 16px;padding:8px 24px;border-bottom:0;background:#f9f9fdf5;box-shadow:0 1px 8px #0000000a}
 body.family[data-screen="8"] #app .visit-heading small{margin-top:0}
+/* Keep family header offsets tied to the actual account strip on desktop too. */
+body.family{--family-session-height:48px}
+body.family #demo-bar{height:var(--family-session-height);min-height:var(--family-session-height)!important;box-sizing:border-box}
+body.family>header{top:var(--family-session-height)!important}
+body:is(.staff,.family) #demo-bar .session-role{max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:800px){
+ body.family{--family-session-height:calc(64px + env(safe-area-inset-top,0px))}
+ body.family #demo-bar .session-role{max-width:135px}
+}
