@@ -1,0 +1,10 @@
+(async()=>{
+const panel=document.getElementById('setup-panel'),setup=document.querySelector('script[data-mode]').dataset.mode==='setup',esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function call(path,body){const r=await fetch('/api/'+path,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined,cache:'no-store'}),d=await r.json();if(!r.ok)throw Error(d.error);return d}
+try{
+ let email;if(setup){const d=await call('auth/admin-setup');email=d.email;if(!d.canSetup){panel.innerHTML='<p>이미 비밀번호를 설정했습니다. 이메일과 비밀번호로 로그인해 주세요.</p><a href="/login.html">로그인하기 →</a>';return}}
+ else{const d=await call('session');if(!d.viewer){location.href='/login.html';return}email=d.viewer.email}
+ panel.innerHTML=`<p>계정: <strong>${esc(email)}</strong></p><form id="password-form">${setup?'':'<label>현재 비밀번호<input name="currentPassword" type="password" maxlength="128" autocomplete="current-password" required></label>'}<label>${setup?'비밀번호':'새 비밀번호'}<input name="newPassword" type="password" minlength="12" maxlength="128" autocomplete="new-password" required></label><p class="muted">12~128자의 비밀번호를 직접 입력해 주세요.</p><label>비밀번호 확인<input name="confirm" type="password" minlength="12" maxlength="128" autocomplete="new-password" required></label><button type="submit" class="auth-submit">${setup?'관리자 비밀번호 설정':'비밀번호 변경'}</button><div class="auth-result" role="alert"></div></form>`;
+ document.getElementById('password-form').onsubmit=async e=>{e.preventDefault();const f=e.target,d=Object.fromEntries(new FormData(f)),out=f.querySelector('.auth-result'),b=f.querySelector('button');out.textContent='';if(d.newPassword!==d.confirm){out.textContent='비밀번호 확인이 일치하지 않습니다.';return}b.disabled=true;try{delete d.confirm;await call(setup?'auth/admin-setup':'auth/password',setup?{password:d.newPassword}:d);panel.innerHTML='<div class="auth-notice">비밀번호를 저장했습니다.</div><a class="persona" href="/login.html">내 계정 열기 →</a>'}catch(e){out.textContent=e.message;b.disabled=false}};
+}catch(e){panel.textContent=e.message+(setup?' 기존 관리자가 로그인했던 브라우저에서 열어 주세요.':'')}
+})();

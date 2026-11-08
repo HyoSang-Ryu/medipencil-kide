@@ -1,0 +1,22 @@
+{
+  "mode": "built-in image_gen",
+  "use_case": "photorealistic-natural",
+  "assets": {
+    "p1": {
+      "file": "assets/generated/p1.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: fictional patient profile photo for a Korean elder care application using only synthetic data. Subject: fictional Korean woman, age 82, short softly curled silver hair, warm gentle smile, cream cardigan over pale sage blouse. Single person, respectful realistic head-and-shoulders portrait, looking toward camera, entire head visible with breathing room, softly blurred bright care-home garden background. Soft natural window light, realistic skin texture and age details, editorial portrait photography. Square composition. No text, no logo, no watermark, no medical devices, no collage. Entirely invented person, not a real individual."
+    },
+    "p2": {
+      "file": "assets/generated/p2.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: fictional patient profile photo for a Korean elder care application using only synthetic data. Subject: fictional Korean woman, age 89, straight short silver bob, dignified calm expression, pale blue cardigan. Single person, respectful realistic head-and-shoulders portrait, looking toward camera, entire head visible with breathing room, softly blurred bright care-home garden background. Soft natural window light, realistic skin texture and age details, editorial portrait photography. Square composition. No text, no logo, no watermark, no medical devices, no collage. Entirely invented person, not a real individual."
+    },
+    "p3": {
+      "file": "assets/generated/p3.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: fictional patient profile photo for a Korean elder care application using only synthetic data. Subject: fictional Korean man, age 76, neatly combed salt-and-pepper hair, warm kind eyes, light gray casual sweater. Single person, respectful realistic head-and-shoulders portrait, looking toward camera, entire head visible with breathing room, softly blurred bright care-home garden background. Soft natural window light, realistic skin texture and age details, editorial portrait photography. Square composition. No text, no logo, no watermark, no medical devices, no collage. Entirely invented person, not a real individual."
+    },
+    "p4": {
+      "file": "assets/generated/p4.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: fictional patient profile photo for a Korean elder care application using only synthetic data. Subject: fictional Korean woman, age 85, soft white wavy hair, cheerful gentle smile, muted lavender cardigan. Single person, respectful realistic head-and-shoulders portrait, looking toward camera, entire head visible with breathing room, softly blurred bright care-home garden background. Soft natural window light, realistic skin texture and age details, editorial portrait photography. Square composition. No text, no logo, no watermark, no medical devices, no collage. Entirely invented person, not a real individual."
+    }
+  }
+}
