@@ -9,7 +9,7 @@ let r=await request('state',{method:'OPTIONS',headers:{Origin:pages,'Access-Cont
 r=await request('state',{headers:{Origin:'https://untrusted.example'}});check(r.status,403);check(r.headers.get('Access-Control-Allow-Origin'),null);
 r=await request('state',{headers:{Origin:pages,'X-MP-Session':'invalid'}});check(r.status,401);check(r.headers.get('Access-Control-Allow-Origin'),pages);
 for(const email of ['admin@demo.test','doctor@demo.test','family@demo.test']){
- r=await request('auth/login',{method:'POST',headers:{Origin:pages,'X-MP-Client':'pages','Content-Type':'application/json'},body:JSON.stringify({email,password})});check(r.status,200);const login=await r.json();assert.match(login.sessionToken,/^[a-f0-9]{64}$/);checks++;check(r.headers.get('set-cookie'),null);
+ r=await request('auth/login',{method:'POST',headers:{Origin:pages,'X-MP-Client':'pages','Content-Type':'application/json'},body:JSON.stringify({email,password})});check(r.status,200);const login=await r.json();assert.match(login.sessionToken,/^[a-f0-9]{64}$/);checks++;check(r.headers.getSetCookie().some(c=>/^(?:__Host-)?mp_session=/.test(c)),false);
  const headers={Origin:pages,'X-MP-Client':'pages','X-MP-Session':login.sessionToken};
  try{
   r=await request('state',{headers});check(r.status,200);const state=await r.json();
