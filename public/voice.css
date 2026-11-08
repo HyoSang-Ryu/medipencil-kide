@@ -38,3 +38,9 @@ body.staff[data-screen="12"] #app .voice-history-item strong{font:var(--type-lab
  body.staff[data-screen="12"] #app .voice-capture .actions{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
  body.staff[data-screen="12"] #app .voice-capture .actions .btn{width:100%}
 }
+/* Restore the same ZIP label tokens in the shared staff shell, overriding
+   layout.css's compact font sizes on this screen. */
+body.staff[data-screen="12"]>aside nav a,
+body.staff[data-screen="12"] .font-label-md{font:var(--type-label-md)!important}
+body.staff[data-screen="12"] .font-label-sm{font:var(--type-label-sm)!important}
+body.staff[data-screen="12"] .font-headline-sm{font:var(--type-headline-sm)!important}
