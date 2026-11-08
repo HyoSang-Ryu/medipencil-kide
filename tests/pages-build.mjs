@@ -5,3 +5,7 @@ for(const fragment of ["(asset?'/'+encodeURIComponent(asset):'')","id=pid+'/'+as
 for(const file of ['9.html','4.html','3.html']){const html=await readFile('pages-dist/'+file,'utf8');assert.ok(html.includes('/medipencil-kide/pages-runtime.js'));assert.ok(html.includes('/medipencil-kide/app.js'));assert.ok(html.includes('/medipencil-kide/mobile.css'));}
 await assert.rejects(access('pages-dist/assets/generated/activities/p1.png'));
 console.log('PASS: Pages navigation, authenticated photo URL composition, runtime loading, and private image packaging.');
+
+for(const screen of [1,2,3,6]){const html=await readFile('pages-dist/'+screen+'.html','utf8');assert.ok(html.includes('/medipencil-kide/staff.css'));assert.ok(html.includes('/medipencil-kide/staff-charts.js'));assert.ok(html.indexOf('/medipencil-kide/staff-charts.js')<html.indexOf('/medipencil-kide/app.js'));}
+await access('pages-dist/staff-charts.js');
+console.log('PASS: all four staff routes include styled controls and chart runtime before the app.');
