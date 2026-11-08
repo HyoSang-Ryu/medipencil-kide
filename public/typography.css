@@ -104,3 +104,15 @@ body.family>nav a,body.family>nav a>span:last-child{font:var(--type-label-sm)!im
 }
 /* Wrap whole Korean menu words rather than leaving a final syllable alone. */
 body.staff>aside nav a{word-break:keep-all!important;overflow-wrap:normal!important}
+/* Component-specific compact overrides found during computed-style QA. */
+body.staff[data-screen] #app .vital>span,
+body.staff[data-screen] #app .ward-patient footer,
+body.staff[data-screen] #app .ward-patient footer>span,
+body.staff[data-screen] #app caption,
+body.staff[data-screen] #app .trend-foot{font:var(--type-label-sm)}
+body.staff[data-screen] #app .trend-foot strong{font:var(--type-label-md)}
+body.staff[data-screen] #app .report-note{font:var(--type-body-sm)}
+body.family[data-screen] #app .card-head>span,
+body.family[data-screen] #app .family-entry .care-entry-head .tag{font:var(--type-label-sm)}
+body:is(.staff,.family) #demo-bar,
+body:is(.staff,.family) #demo-bar>span:first-child{font:var(--type-label-sm)!important}
