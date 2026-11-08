@@ -1,0 +1,36 @@
+{
+  "mode": "built-in image_gen",
+  "use_case": "photorealistic-natural",
+  "assets": [
+    {
+      "id": "p1",
+      "file": "p1.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: activity photo in a Korean elder-care family portal demo. Create one wide landscape candid editorial photograph of the fictional older Korean adult in the reference image, seated at a light oak table making a small watercolor painting of flowers, a friendly Korean female care worker nearby. Preserve their face, age, hair and cardigan color from the reference. Warm natural daylight, dignified and relaxed everyday care-home atmosphere, realistic hands and skin, medium-wide composition showing the person and the activity clearly. Entirely synthetic people and synthetic scene, not a real patient or real treatment record. No medical claims, no text, no logos, no watermark, no collage. Landscape 3:2."
+    },
+    {
+      "id": "p2",
+      "file": "p2.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: activity photo in a Korean elder-care family portal demo. Create one wide landscape candid editorial photograph of the fictional older Korean adult in the reference image, seated in a sunny lounge gently arranging fresh flowers into a small vase with a female activity coordinator. Preserve their face, age, hair and cardigan color from the reference. Warm natural daylight, dignified and relaxed everyday care-home atmosphere, realistic hands and skin, medium-wide composition showing the person and the activity clearly. Entirely synthetic people and synthetic scene, not a real patient or real treatment record. No medical claims, no text, no logos, no watermark, no collage. Landscape 3:2."
+    },
+    {
+      "id": "p3",
+      "file": "p3.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: activity photo in a Korean elder-care family portal demo. Create one wide landscape candid editorial photograph of the fictional older Korean adult in the reference image, seated in a bright rehabilitation room doing a gentle supervised seated arm exercise with a male therapist. Preserve their face, age, hair and cardigan color from the reference. Warm natural daylight, dignified and relaxed everyday care-home atmosphere, realistic hands and skin, medium-wide composition showing the person and the activity clearly. Entirely synthetic people and synthetic scene, not a real patient or real treatment record. No medical claims, no text, no logos, no watermark, no collage. Landscape 3:2."
+    },
+    {
+      "id": "p4",
+      "file": "p4.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: activity photo in a Korean elder-care family portal demo. Create one wide landscape candid editorial photograph of the fictional older Korean adult in the reference image, seated beside raised garden planters in a sunny enclosed care-home courtyard, tending a small pot of herbs with a female care worker. Preserve their face, age, hair and cardigan color from the reference. Warm natural daylight, dignified and relaxed everyday care-home atmosphere, realistic hands and skin, medium-wide composition showing the person and the activity clearly. Entirely synthetic people and synthetic scene, not a real patient or real treatment record. No medical claims, no text, no logos, no watermark, no collage. Landscape 3:2."
+    },
+    {
+      "id": "p1-garden",
+      "file": "p1-garden.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: synthetic activity photo in a Korean elder-care family portal. The fictional elderly Korean woman from the reference image is sitting comfortably in a garden chair beside raised planters, watering a small herb pot together with a care worker. Keep her face, soft curly silver hair, age and cream cardigan with sage blouse. Natural candid editorial photograph, warm daylight, dignified pleasant expression, realistic hands and anatomy. Wide landscape 3:2 composition showing both person and activity. Entirely invented people and scene; no real patient, no text, no logo, no watermark, no collage."
+    },
+    {
+      "id": "p1-meal",
+      "file": "p1-meal.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: synthetic activity photo in a Korean elder-care family portal. The fictional elderly Korean woman from the reference image is seated at a care-home dining table enjoying a balanced Korean lunch with soup, rice and side dishes, a care worker chatting warmly nearby. Keep her face, soft curly silver hair, age and cream cardigan with sage blouse. Natural candid editorial photograph, warm daylight, dignified pleasant expression, realistic hands and anatomy. Wide landscape 3:2 composition showing both person and activity. Entirely invented people and scene; no real patient, no text, no logo, no watermark, no collage."
+    }
+  ]
+}

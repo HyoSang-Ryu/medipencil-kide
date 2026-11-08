@@ -14,8 +14,13 @@ for(const email of ['admin@demo.test','doctor@demo.test','family@demo.test']){
  try{
   r=await request('state',{headers});check(r.status,200);const state=await r.json();
   check(state.patients.map(p=>p.id).sort(),email.startsWith('family')?['p1']:['p1','p2','p3','p4']);
+  check(state.activities.length,email.startsWith('family')?3:6);
+  check(state.activities.every(photo=>state.patients.some(p=>p.id===photo.patient_id)),true);
   check((await request('accounts',{headers})).status,email.startsWith('admin')?200:403);
   if(email.startsWith('family')){
+   for(const asset of ['activity-art','activity-garden','activity-meal'])check((await request('photos/p1/'+asset,{headers})).status,200);
+   check((await request('photos/p2/activity-flowers',{headers})).status,403);
+   check((await request('photos/p1/activity-flowers',{headers})).status,404);
    check((await request('photos/p1',{headers})).status,200);check((await request('photos/p2',{headers})).status,403);
    check((await request('messages',{method:'POST',headers:{...headers,'Content-Type':'application/json','Idempotency-Key':crypto.randomUUID()},body:JSON.stringify({patientId:'p2',kind:'inquiry',body:'scope test denied'})})).status,403);
   }

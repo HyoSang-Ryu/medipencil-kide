@@ -1,6 +1,7 @@
 import { env } from 'cloudflare:workers';
 import { authenticatedMember, authRoute, AuthError } from './password-auth';
 import { seed } from './seed';
+import { activityPhotos } from './activity-photos';
 import { ensureTestAccounts } from './test-accounts';
 import { resolveAccount } from './accounts';
 class ApiError extends Error{constructor(public status:number,message:string){super(message)}}
@@ -55,9 +56,9 @@ async function handleInternal(request:Request){
   const event=(action:string,id:string)=>db.prepare('INSERT INTO audit_events (id,actor,action,entity_id,created_at) VALUES (?,?,?,?,?)').bind(crypto.randomUUID(),actor.name,action,id,now());
   const idem=()=>text(request.headers.get('Idempotency-Key'),100);
   if(path[0]==='photos'&&path[1]){
-   const pid=await patient(path[1]);if(!env.BUCKET)throw new ApiError(503,'사진 저장소를 연결 중입니다.');
+   const pid=await patient(path[1]);const asset=path[2]||'portrait';if(path.length>3||(asset!=='portrait'&&!activityPhotos.some(photo=>photo.patient_id===pid&&photo.asset===asset)))throw new ApiError(404,'사진을 찾을 수 없습니다.');if(!env.BUCKET)throw new ApiError(503,'사진 저장소를 연결 중입니다.');
    if(method==='GET'){
-    const image=await env.BUCKET.get('patients/'+pid+'/portrait.png');if(!image)throw new ApiError(404,'프로필 사진이 없습니다.');
+    const image=await env.BUCKET.get('patients/'+pid+'/'+asset+'.png');if(!image)throw new ApiError(404,'프로필 사진이 없습니다.');
     return new Response(image.body,{headers:{'Content-Type':'image/png','Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});
    }
    if(method==='PUT'){
@@ -65,8 +66,8 @@ async function handleInternal(request:Request){
     if(request.headers.get('content-type')!=='image/png')throw new ApiError(415,'PNG 사진을 선택해 주세요.');
     const buffer=await request.arrayBuffer(),bytes=new Uint8Array(buffer);
     if(bytes.length>5*1024*1024||bytes.length<8||![137,80,78,71,13,10,26,10].every((x,i)=>bytes[i]===x))throw new ApiError(400,'5MB 이하 PNG 사진을 선택해 주세요.');
-    await env.BUCKET.put('patients/'+pid+'/portrait.png',buffer,{httpMetadata:{contentType:'image/png'}});
-    await event('합성 프로필 사진 등록',pid).run();return json({ok:true});
+    await env.BUCKET.put('patients/'+pid+'/'+asset+'.png',buffer,{httpMetadata:{contentType:'image/png'}});
+    await event('합성 '+(asset==='portrait'?'프로필':'활동')+' 사진 등록',pid).run();return json({ok:true});
    }
   }
   if(path[0]==='accounts'){
@@ -112,7 +113,7 @@ async function handleInternal(request:Request){
    const m=await db.prepare(`SELECT m.*,EXISTS(SELECT 1 FROM message_reads r WHERE r.message_id=m.id AND r.persona IN (SELECT id FROM app_users WHERE status='active' AND ((m.sender_role='staff' AND role='family') OR (m.sender_role='family' AND role IN ('staff','admin'))))) AS read_by_other FROM messages m WHERE 1=1${scope.replace('patient_id','m.patient_id')} ORDER BY m.created_at DESC,m.id DESC LIMIT 500`).bind(...params).all();
    const b=await db.prepare(`SELECT * FROM bookings WHERE 1=1${scope} ORDER BY date DESC,time DESC LIMIT 200`).bind(...params).all();
    const a=actor.role==='staff'?await db.prepare('SELECT * FROM audit_events ORDER BY created_at DESC LIMIT 30').all():{results:[]};
-   return json({actor,patients:p.results,logs:l.results,messages:[...m.results].reverse(),bookings:b.results,audit:a.results,serverTime:now(),synthetic:true});
+   return json({actor,patients:p.results,logs:l.results,activities:activityPhotos.filter(photo=>p.results.some(patient=>patient.id===photo.patient_id)),messages:[...m.results].reverse(),bookings:b.results,audit:a.results,serverTime:now(),synthetic:true});
   }
   if(path[0]==='logs'&&method==='POST'){
    staff();const pid=await patient(body.patientId),key=actor.persona+':'+pid+':'+idem(),id=crypto.randomUUID();
