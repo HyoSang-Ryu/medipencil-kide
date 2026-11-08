@@ -5,7 +5,7 @@ await rm(out,{recursive:true,force:true});await mkdir(out,{recursive:true});awai
 for(const name of await readdir(out)){
  if(!/\.(html|js|css)$/.test(name))continue;
  let s=await readFile(path.join(out,name),'utf8');
- s=s.replace(/(["'`])\/(?!\/|api\/)(?=[a-zA-Z]|\$\{)/g,`$1${base}`);
+ s=s.replace(/(["'`])\/(?!\/|api\/)(?=[a-zA-Z0-9]|\$\{)/g,`$1${base}`);
  if(name.endsWith('.html'))s=s.replace('<head>','<head><script src="'+base+'pages-runtime.js"></script>');
  await writeFile(path.join(out,name),s);
 }
