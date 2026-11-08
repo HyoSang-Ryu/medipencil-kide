@@ -17,6 +17,7 @@ jobs:
         with:
           node-version: '22'
       - run: node scripts/build-pages.mjs
+      - run: node tests/pages-build.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: pages-dist
