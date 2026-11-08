@@ -45,3 +45,15 @@ export const adminSetupGrants = sqliteTable('admin_setup_grants',{
 export const seedInstallations = sqliteTable('seed_installations',{
  key:text('key').primaryKey(),appliedAt:text('applied_at').notNull()
 });
+export const activityManagers=sqliteTable('activity_managers',{
+ userId:text('user_id').primaryKey().references(()=>appUsers.id)
+});
+export const activityEvents=sqliteTable('activity_events',{
+ id:text('id').primaryKey(),name:text('name').notNull(),date:text('date').notNull(),category:text('category').notNull(),title:text('title').notNull(),description:text('description').notNull(),provenance:text('provenance').notNull(),status:text('status').notNull(),author:text('author').notNull(),createdAt:text('created_at').notNull(),requestKey:text('request_key').unique().notNull(),photoCount:integer('photo_count').notNull()
+});
+export const activityParticipants=sqliteTable('activity_participants',{
+ eventId:text('event_id').notNull().references(()=>activityEvents.id),patientId:text('patient_id').notNull().references(()=>patients.id)
+},t=>[uniqueIndex('activity_participant').on(t.eventId,t.patientId)]);
+export const activityFiles=sqliteTable('activity_files',{
+ id:text('id').primaryKey(),eventId:text('event_id').notNull().references(()=>activityEvents.id),contentType:text('content_type').notNull(),createdAt:text('created_at').notNull()
+});

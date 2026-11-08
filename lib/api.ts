@@ -1,6 +1,7 @@
 import { env } from 'cloudflare:workers';
 import { authenticatedMember, authRoute, AuthError } from './password-auth';
 import { seed } from './seed';
+import {registeredActivities,imageType} from './activities';
 import { activityPhotos } from './activity-photos';
 import { ensureTestAccounts } from './test-accounts';
 import { resolveAccount } from './accounts';
@@ -35,10 +36,10 @@ async function handleInternal(request:Request){
   if(path[0]==='health')return json({ok:true,database:!!(await db.prepare('SELECT 1 AS ok').first()),synthetic:true,authentication:'email-password'});
   if(!['GET','HEAD'].includes(method)){
    const origin=request.headers.get('origin');if(origin&&origin!==new URL(request.url).origin&&origin!=='https://hyosang-ryu.github.io')throw new ApiError(403,'허용되지 않은 요청입니다.');
-   if(!(path[0]==='photos'&&method==='PUT')&&!request.headers.get('content-type')?.includes('application/json'))throw new ApiError(415,'JSON 요청이 필요합니다.');
-   if(Number(request.headers.get('content-length')||0)>(path[0]==='photos'?5*1024*1024:20000))throw new ApiError(413,'요청이 너무 큽니다.');
+   if(!(['photos','activities'].includes(path[0])&&method==='PUT')&&!request.headers.get('content-type')?.includes('application/json'))throw new ApiError(415,'JSON 요청이 필요합니다.');
+   if(Number(request.headers.get('content-length')||0)>(['photos','activities'].includes(path[0])?5*1024*1024:20000))throw new ApiError(413,'요청이 너무 큽니다.');
   }
-  let body:any={};if(!['GET','HEAD'].includes(method)&&!(path[0]==='photos'&&method==='PUT')){let raw=await request.text();if(raw.length>20000)throw new ApiError(413,'요청이 너무 큽니다.');try{body=JSON.parse(raw);if(!body||typeof body!=='object'||Array.isArray(body))throw Error('invalid body')}catch{throw new ApiError(400,'요청 내용을 확인해 주세요.')}}
+  let body:any={};if(!['GET','HEAD'].includes(method)&&!(['photos','activities'].includes(path[0])&&method==='PUT')){let raw=await request.text();if(raw.length>20000)throw new ApiError(413,'요청이 너무 큽니다.');try{body=JSON.parse(raw);if(!body||typeof body!=='object'||Array.isArray(body))throw Error('invalid body')}catch{throw new ApiError(400,'요청 내용을 확인해 주세요.')}}
   if((path[0]==='session'&&method==='GET')||(path[0]==='auth'&&path[1]==='login'&&method==='POST'))await ensureTestAccounts(db);
   const auth=await authRoute(db,request,path,body);if(auth)return auth;
   const viewer=await authenticatedMember(db,request);
@@ -56,7 +57,10 @@ async function handleInternal(request:Request){
   const event=(action:string,id:string)=>db.prepare('INSERT INTO audit_events (id,actor,action,entity_id,created_at) VALUES (?,?,?,?,?)').bind(crypto.randomUUID(),actor.name,action,id,now());
   const idem=()=>text(request.headers.get('Idempotency-Key'),100);
   if(path[0]==='photos'&&path[1]){
-   const pid=await patient(path[1]);const asset=path[2]||'portrait';if(path.length>3||(asset!=='portrait'&&!activityPhotos.some(photo=>photo.patient_id===pid&&photo.asset===asset)))throw new ApiError(404,'사진을 찾을 수 없습니다.');if(!env.BUCKET)throw new ApiError(503,'사진 저장소를 연결 중입니다.');
+   const pid=await patient(path[1]);const asset=path[2]||'portrait';if(method==='GET'&&asset.startsWith('registered-')){
+    const fileId=asset.slice(11);const row=await db.prepare("SELECT f.id,f.content_type FROM activity_files f JOIN activity_events e ON e.id=f.event_id JOIN activity_participants p ON p.event_id=e.id WHERE f.id=? AND p.patient_id=? AND e.status='published'").bind(fileId,pid).first<any>();
+    if(!row||path.length>3)throw new ApiError(404,'사진을 찾을 수 없습니다.');const file=await env.BUCKET?.get('activities/'+row.id);if(!file)throw new ApiError(404,'사진을 찾을 수 없습니다.');return new Response(file.body,{headers:{'Content-Type':row.content_type,'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});
+   }if(path.length>3||(asset!=='portrait'&&!activityPhotos.some(photo=>photo.patient_id===pid&&photo.asset===asset)))throw new ApiError(404,'사진을 찾을 수 없습니다.');if(!env.BUCKET)throw new ApiError(503,'사진 저장소를 연결 중입니다.');
    if(method==='GET'){
     const image=await env.BUCKET.get('patients/'+pid+'/'+asset+'.png');if(!image)throw new ApiError(404,'프로필 사진이 없습니다.');
     return new Response(image.body,{headers:{'Content-Type':'image/png','Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});
@@ -70,10 +74,48 @@ async function handleInternal(request:Request){
     await event('합성 '+(asset==='portrait'?'프로필':'활동')+' 사진 등록',pid).run();return json({ok:true});
    }
   }
+  if(path[0]==='activities'){
+   if(!actor.canManageActivities)throw new ApiError(403,'관리자 또는 지정된 프로그램 담당자만 등록할 수 있습니다.');
+   if(path.length===1&&method==='GET'){
+    const events=await db.prepare('SELECT * FROM activity_events ORDER BY created_at DESC LIMIT 100').all();
+    const participants=await db.prepare('SELECT * FROM activity_participants').all();
+    const files=await db.prepare('SELECT id,event_id FROM activity_files').all();
+    return json({events:events.results,participants:participants.results,files:files.results});
+   }
+   if(path.length===1&&method==='POST'){
+    const name=text(body.name,80),date=text(body.date,10),category=choice(body.category,['종합 케어','식사','재활']),provenance=choice(body.provenance,['real','synthetic']);
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(Date.parse(date+'T00:00:00Z'))||new Date(date+'T00:00:00Z').toISOString().slice(0,10)!==date)throw new ApiError(400,'활동 날짜를 확인해 주세요.');
+    const title=body.title?text(body.title,120):name+' · '+date,description=body.description?text(body.description,1000):date+' '+name+' 활동 모습입니다.';
+    const ids=Array.isArray(body.patientIds)?[...new Set(body.patientIds.map((x:unknown)=>text(x,20)))]:[];
+    if(!ids.length||ids.length>10)throw new ApiError(400,'참여 어르신을 선택해 주세요.');for(const id of ids)await patient(id);
+    const count=number(body.photoCount,1,8,true);if(!count)throw new ApiError(400,'사진은 1~8장 선택해 주세요.');
+    const key=actor.persona+':activity:'+idem(),prior=await db.prepare('SELECT id,status FROM activity_events WHERE request_key=?').bind(key).first();if(prior)return json({event:prior});
+    const id=crypto.randomUUID();await db.batch([db.prepare("INSERT INTO activity_events (id,name,date,category,title,description,provenance,status,author,created_at,request_key,photo_count) VALUES (?,?,?,?,?,?,?,'draft',?,?,?,?)").bind(id,name,date,category,title,description,provenance,actor.name,now(),key,count),...ids.map(pid=>db.prepare('INSERT INTO activity_participants (event_id,patient_id) VALUES (?,?)').bind(id,pid)),event('활동 사진 임시 등록',id)]);return json({event:{id,status:'draft'}},201);
+   }
+   const e=await db.prepare('SELECT * FROM activity_events WHERE id=?').bind(path[1]||'').first<any>();if(!e)throw new ApiError(404,'활동을 찾을 수 없습니다.');
+   if(method==='PUT'&&path.length===4&&path[2]==='photos'){
+    if(e.status!=='draft')throw new ApiError(409,'임시 등록 활동만 사진을 추가할 수 있습니다.');
+    if(!/^[a-f0-9-]{36}$/.test(path[3]))throw new ApiError(400,'사진 식별자를 확인해 주세요.');
+    const existing=await db.prepare('SELECT event_id FROM activity_files WHERE id=?').bind(path[3]).first<any>();if(existing&&existing.event_id!==e.id)throw new ApiError(409,'사진 식별자가 중복되었습니다.');
+    const count=await db.prepare('SELECT COUNT(*) AS n FROM activity_files WHERE event_id=?').bind(e.id).first<any>();if(!existing&&count.n>=e.photo_count)throw new ApiError(409,'등록할 사진 수를 초과했습니다.');
+    const bytes=new Uint8Array(await request.arrayBuffer());if(bytes.length<12||bytes.length>5*1024*1024)throw new ApiError(400,'사진당 5MB 이하 파일을 선택해 주세요.');
+    const type=imageType(bytes);if(!type||type!==request.headers.get('content-type'))throw new ApiError(415,'JPG, PNG 또는 WebP 사진을 선택해 주세요.');if(!env.BUCKET)throw new ApiError(503,'사진 저장소 연결을 확인해 주세요.');
+    await env.BUCKET.put('activities/'+path[3],bytes,{httpMetadata:{contentType:type}});
+    await db.prepare('INSERT OR IGNORE INTO activity_files (id,event_id,content_type,created_at) VALUES (?,?,?,?)').bind(path[3],e.id,type,now()).run();return json({ok:true});
+   }
+   if(method==='PATCH'&&path.length===2){
+    const status=choice(body.status,['published','withdrawn']);if(status==='published'){
+     if(e.status==='withdrawn')throw new ApiError(409,'공유 중단한 활동은 새로 등록해 주세요.');
+     const count=await db.prepare('SELECT COUNT(*) AS n FROM activity_files WHERE event_id=?').bind(e.id).first<any>();if(count.n!==e.photo_count)throw new ApiError(409,'사진 업로드를 모두 완료한 뒤 공유해 주세요.');
+    }
+    await db.batch([db.prepare('UPDATE activity_events SET status=? WHERE id=?').bind(status,e.id),event(status==='published'?'활동 사진 가족 공유':'활동 사진 공유 중단',e.id)]);return json({ok:true});
+   }
+   throw new ApiError(405,'지원하지 않는 활동 요청입니다.');
+  }
   if(path[0]==='accounts'){
    if(!actor.isAdmin)throw new ApiError(403,'관리자만 계정을 관리할 수 있습니다.');
    if(method==='GET'){
-    const users=await db.prepare('SELECT id,email,name,role,status,EXISTS(SELECT 1 FROM password_credentials c WHERE c.user_id=app_users.id) AS signed_in,created_at FROM app_users ORDER BY created_at DESC').all();
+    const users=await db.prepare('SELECT id,email,name,role,status,EXISTS(SELECT 1 FROM activity_managers am WHERE am.user_id=app_users.id) AS can_manage_activities,EXISTS(SELECT 1 FROM password_credentials c WHERE c.user_id=app_users.id) AS signed_in,created_at FROM app_users ORDER BY created_at DESC').all();
     const links=await db.prepare('SELECT * FROM family_links').all(),requests=await db.prepare("SELECT * FROM access_requests WHERE status='pending' ORDER BY created_at DESC").all();
     return json({users:users.results,links:links.results,requests:requests.results,patients:(await db.prepare('SELECT id,name,room FROM patients ORDER BY room').all()).results});
    }
@@ -89,6 +131,8 @@ async function handleInternal(request:Request){
     const id=existing.id,ts=now();
     const statements=[db.prepare("INSERT INTO app_users (id,email,name,role,status,created_at,updated_at) VALUES (?,?,?,?,'active',?,?) ON CONFLICT(email) DO UPDATE SET name=excluded.name,role=excluded.role,status='active',updated_at=excluded.updated_at").bind(id,email,name,role,ts,ts),db.prepare('DELETE FROM family_links WHERE user_id=?').bind(id)];
     if(role==='family')for(const pid of ids)statements.push(db.prepare('INSERT INTO family_links (id,user_id,patient_id) VALUES (?,?,?)').bind(crypto.randomUUID(),id,pid));
+    statements.push(db.prepare('DELETE FROM activity_managers WHERE user_id=?').bind(id));
+    if(role==='staff'&&body.canManageActivities===true)statements.push(db.prepare('INSERT INTO activity_managers (user_id) VALUES (?)').bind(id));
     statements.push(db.prepare("UPDATE access_requests SET status='approved' WHERE email=?").bind(email),event('계정 권한 및 가족 연결',id));
     await db.batch(statements);return json({ok:true,id},201);
    }
@@ -113,7 +157,7 @@ async function handleInternal(request:Request){
    const m=await db.prepare(`SELECT m.*,EXISTS(SELECT 1 FROM message_reads r WHERE r.message_id=m.id AND r.persona IN (SELECT id FROM app_users WHERE status='active' AND ((m.sender_role='staff' AND role='family') OR (m.sender_role='family' AND role IN ('staff','admin'))))) AS read_by_other FROM messages m WHERE 1=1${scope.replace('patient_id','m.patient_id')} ORDER BY m.created_at DESC,m.id DESC LIMIT 500`).bind(...params).all();
    const b=await db.prepare(`SELECT * FROM bookings WHERE 1=1${scope} ORDER BY date DESC,time DESC LIMIT 200`).bind(...params).all();
    const a=actor.role==='staff'?await db.prepare('SELECT * FROM audit_events ORDER BY created_at DESC LIMIT 30').all():{results:[]};
-   return json({actor,patients:p.results,logs:l.results,activities:activityPhotos.filter(photo=>p.results.some(patient=>patient.id===photo.patient_id)),messages:[...m.results].reverse(),bookings:b.results,audit:a.results,serverTime:now(),synthetic:true});
+   return json({actor,patients:p.results,logs:l.results,activities:[...await registeredActivities(db,actor.role==='staff'?null:params),...activityPhotos.filter(photo=>p.results.some(patient=>patient.id===photo.patient_id))],messages:[...m.results].reverse(),bookings:b.results,audit:a.results,serverTime:now(),synthetic:true});
   }
   if(path[0]==='logs'&&method==='POST'){
    staff();const pid=await patient(body.patientId),key=actor.persona+':'+pid+':'+idem(),id=crypto.randomUUID();

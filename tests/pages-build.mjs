@@ -9,3 +9,9 @@ console.log('PASS: Pages navigation, authenticated photo URL composition, runtim
 for(const screen of [1,2,3,6]){const html=await readFile('pages-dist/'+screen+'.html','utf8');assert.ok(html.includes('/medipencil-kide/staff.css'));assert.ok(html.includes('/medipencil-kide/staff-charts.js'));assert.ok(html.indexOf('/medipencil-kide/staff-charts.js')<html.indexOf('/medipencil-kide/app.js'));}
 await access('pages-dist/staff-charts.js');
 console.log('PASS: all four staff routes include styled controls and chart runtime before the app.');
+const activity=await readFile('pages-dist/activities.html','utf8');
+assert.ok(activity.includes('window.PAGE=11'));
+assert.ok(activity.includes('/medipencil-kide/pages-runtime.js'));
+assert.ok(app.includes('href="/medipencil-kide/activities.html"'));
+assert.ok(app.includes("'/api/activities/'"));
+console.log('PASS: activity management route, scoped upload transport and Pages navigation.');
