@@ -1,0 +1,106 @@
+/* Source: ZIP serene_nordic_care/DESIGN.md; semantic mappings from _1…_9.
+   One typography layer after layout/mobile/staff styles. Icons retain their font. */
+:root{
+ --type-headline-lg:700 36px/44px 'Plus Jakarta Sans',Arial,'Apple SD Gothic Neo',sans-serif;
+ --type-headline-md:700 24px/32px 'Plus Jakarta Sans',Arial,'Apple SD Gothic Neo',sans-serif;
+ --type-headline-sm:600 20px/28px 'Plus Jakarta Sans',Arial,'Apple SD Gothic Neo',sans-serif;
+ --type-body-lg:400 18px/28px 'Plus Jakarta Sans',Arial,'Apple SD Gothic Neo',sans-serif;
+ --type-body-md:400 16px/24px 'Plus Jakarta Sans',Arial,'Apple SD Gothic Neo',sans-serif;
+ --type-body-sm:400 14px/20px 'Plus Jakarta Sans',Arial,'Apple SD Gothic Neo',sans-serif;
+ --type-label-lg:600 16px/24px 'Plus Jakarta Sans',Arial,'Apple SD Gothic Neo',sans-serif;
+ --type-label-md:600 14px/20px 'Plus Jakarta Sans',Arial,'Apple SD Gothic Neo',sans-serif;
+ --type-label-sm:500 12px/16px 'Plus Jakarta Sans',Arial,'Apple SD Gothic Neo',sans-serif;
+}
+body[data-screen]:is(.staff,.family) #app{font:var(--type-body-md)}
+body[data-screen]:is(.staff,.family) #app h1{font:var(--type-headline-md)}
+body[data-screen]:is(.staff,.family) #app h2,
+body[data-screen]:is(.staff,.family) #app h3{font:var(--type-headline-sm)}
+body[data-screen]:is(.staff,.family) #app p,
+body[data-screen]:is(.staff,.family) #app .voice-source{font:var(--type-body-md)}
+body[data-screen]:is(.staff,.family) #app :is(.muted,.empty,.form-error),
+body[data-screen]:is(.staff,.family) #app .head p,
+body[data-screen]:is(.staff,.family) #app :is(.entry,.booking,.staff-feed) p,
+body[data-screen]:is(.staff,.family) #app :is(.note,.bubble,.activity-card figcaption p){font:var(--type-body-sm)}
+body[data-screen]:is(.staff,.family) #app :is(label,legend,summary,button,.btn,.profile-link){font:var(--type-label-md)}
+body[data-screen]:is(.staff,.family) #app .btn{min-height:48px}
+body[data-screen]:is(.staff,.family) #app :is(small,.tag,.kicker,.activity-badge,.story-caption,.field-caption){font:var(--type-label-sm)}
+body[data-screen]:is(.staff,.family) #app input:not([type=checkbox]):not([type=radio]):not([type=range]),
+body[data-screen]:is(.staff,.family) #app select{font:var(--type-body-md)}
+body[data-screen]:is(.staff,.family) #app textarea{font:var(--type-body-sm)}
+body[data-screen]:is(.staff,.family) #app :is(.vital strong,.family-metrics strong){font:var(--type-headline-sm)}
+body[data-screen]:is(.staff,.family) #app .vital strong small{font:var(--type-label-sm)}
+body[data-screen]:is(.staff,.family) #app :is(.tabs button,.care-section-tabs a,.report-scope button,.vital-metric-tabs button){font:var(--type-label-md)}
+body[data-screen]:is(.staff,.family) #app :is(.activity-card figcaption strong,.voice-history-item strong){font:var(--type-label-lg)}
+body[data-screen]:is(.staff,.family) #app :is(.chart-legend,.chart-note,.staff-chart-table summary){font:var(--type-label-sm)}
+body[data-screen]:is(.staff,.family) #app :is(table th,table td){font:var(--type-body-sm)}
+/* Staff reference _6/_1: headline-lg KPIs; _3: headline-md KPIs. */
+body.staff[data-screen] #app .staff-kpi strong{font:var(--type-headline-lg)}
+body.staff[data-screen="3"] #app .staff-kpi strong{font:var(--type-headline-md)}
+body.staff[data-screen] #app .staff-kpi>div>span:not(.material-symbols-outlined){font:var(--type-label-md)}
+body.staff[data-screen] #app .staff-kpi strong small{font:var(--type-label-md)}
+body.staff[data-screen] #app .staff-kpi p{font:var(--type-body-sm)}
+body.staff[data-screen] #app :is(.staff-patient-details h2){font:var(--type-headline-md)}
+body.staff[data-screen] #app :is(.staff-patient-details p,.ward-patient-head p,.staff-recent p){font:var(--type-body-sm)}
+body.staff[data-screen] #app .staff-recent strong{font:var(--type-label-lg)}
+body.staff[data-screen] #app .staff-recent strong small{font:var(--type-label-sm)}
+body.staff[data-screen] #app .measurement input:not([type=range]){font:var(--type-headline-sm)}
+body.staff[data-screen] #app .measurement .pulse-field input{font:var(--type-body-md)}
+body.staff[data-screen] #app .meal-options strong{font:var(--type-headline-sm)}
+body.staff[data-screen] #app :is(.care-check strong,.roster-patient strong,.staff-recipient strong){font:var(--type-label-md)}
+body.staff[data-screen] #app :is(.care-check small,.roster-patient small,.staff-savebar small){font:var(--type-label-sm)}
+body.staff[data-screen] #app :is(.quick-values button,.roster-filters button,.news-templates button){font:var(--type-label-sm)}
+body.staff[data-screen] #app .staff-savebar strong{font:var(--type-label-md)}
+body.staff[data-screen] #app .staff-photo-strip span{font:var(--type-label-sm)}
+body.staff[data-screen] #app :is(.preview-brand,.preview-author){font:var(--type-label-md)}
+body.staff[data-screen] #app .family-card-preview p{font:var(--type-body-sm)}
+body.staff[data-screen="3"] #app form[data-kind=news] button[type=submit]{font:var(--type-label-lg)}
+/* Family reference _9/_4/_7/_5: headline-sm titles and patient names. */
+body.family[data-screen] #app h1,
+body.family[data-screen] #app .family-patient-info h2{font:var(--type-headline-sm)}
+body.family[data-screen] #app .family-patient-info p{font:var(--type-body-sm)}
+body.family[data-screen] #app :is(.family-patient-info h2 small,.family-portrait small,.family-patient-info>small){font:var(--type-label-sm)}
+body.family[data-screen] #app .story-author strong{font:var(--type-label-md)}
+body.family[data-screen] #app .story-author small{font:var(--type-label-sm)}
+body.family[data-screen] #app .story-thumbnails span{font:var(--type-label-sm)}
+body.family[data-screen] #app .care-story blockquote p{font:var(--type-body-md)}
+body.family[data-screen] #app :is(.story-reply,.date-jump,.family-entry footer,.family-news-card footer){font:var(--type-label-sm)}
+body.family[data-screen] #app .week-days strong{font:var(--type-headline-sm)}
+body.family[data-screen] #app .week-days small{font:var(--type-label-sm)}
+body.family[data-screen] #app :is(.care-team-row strong,.profile-member strong,.visit-choice strong){font:var(--type-label-lg)}
+body.family[data-screen] #app :is(.visit-choice small,.visit-summary .banner){font:var(--type-body-sm)}
+body.family[data-screen="8"] #app :is(.visit-types legend,.card h2){font:var(--type-label-lg)}
+body.family[data-screen="9"] #app .family-quick>a:first-child,
+body.family[data-screen="9"] #app .family-quick .btn:first-child,
+body.family[data-screen="8"] #app form[data-form=booking] button[type=submit]{font:var(--type-label-lg)}
+/* Voice uses the same tokens; retain its already-approved 16px transcript fields. */
+body.staff[data-screen="12"] #app textarea{font:var(--type-body-md)}
+body.staff[data-screen="12"] #app .voice-history-item{font:var(--type-label-md)}
+/* Original utility labels also govern the shared shell. !important is needed
+   because layout.css previously forced compact navigation sizes. */
+body:is(.staff,.family) .font-label-md,
+body.staff>aside nav a{font:var(--type-label-md)!important}
+body:is(.staff,.family) .font-label-lg{font:var(--type-label-lg)!important}
+body:is(.staff,.family) .font-label-sm{font:var(--type-label-sm)!important}
+body:is(.staff,.family) .font-headline-sm{font:var(--type-headline-sm)!important}
+body.family>nav a,body.family>nav a>span:last-child{font:var(--type-label-sm)!important;white-space:normal!important;text-align:center}
+/* Keep token sizes on phones; do not shrink headings, values or metadata.
+   16px editable controls prevent iOS focus zoom and use the body-md token. */
+@media(max-width:800px){
+ body[data-screen]:is(.staff,.family) #app textarea{font:var(--type-body-md)}
+ body.staff[data-screen] #app .staff-savebar>.actions{flex-wrap:wrap}
+ body.family[data-screen] #app .family-patient-top>.tag{font:var(--type-label-sm)}
+ body.family[data-screen] #app .story-author{flex-wrap:wrap}
+ body.family[data-screen] #app .family-metrics strong{white-space:normal}
+ body.family[data-screen] #app .visit-choice{min-height:112px}
+ body.staff[data-screen] #app .report-toolbar .btn{font:var(--type-label-md)}
+}
+@media(max-width:540px){
+ body.staff[data-screen] #app .ward-patient-head>.actions{flex-wrap:wrap}
+ body.staff[data-screen] #app .ward-patient-head>.actions .btn{flex:1 1 100px}
+ body.staff[data-screen] #app .staff-savebar>.actions .btn{min-height:48px}
+ body.family[data-screen] #app .family-patient-top{grid-template-columns:44px minmax(0,1fr)}
+ body.family[data-screen] #app .family-patient-top>.tag{grid-column:2;justify-self:start}
+ body.family[data-screen] #app .family-portrait{grid-row:span 2}
+}
+/* Wrap whole Korean menu words rather than leaving a final syllable alone. */
+body.staff>aside nav a{word-break:keep-all!important;overflow-wrap:normal!important}
