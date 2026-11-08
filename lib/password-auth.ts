@@ -7,7 +7,7 @@ const ts=()=>new Date().toISOString();
 const reply=(body:unknown,status=200,headers:Record<string,string>={})=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...headers}});
 const digest=(value:string)=>createHash('sha256').update(value).digest('hex');
 const cookieName=(request:Request)=>new URL(request.url).protocol==='https:'?'__Host-mp_session':'mp_session';
-function token(request:Request){const bearer=request.headers.get('X-MP-Session');if(bearer)return /^[a-f0-9]{64}$/.test(bearer)?bearer:null;const name=cookieName(request);const found=request.headers.get('cookie')?.split(';').map(v=>v.trim()).find(v=>v.startsWith(name+'='))?.slice(name.length+1);return found&&/^[a-f0-9]{64}$/.test(found)?found:null}
+function token(request:Request){const bearer=request.headers.get('X-MP-Session');if(bearer)return /^[a-f0-9]{64}$/.test(bearer)?bearer:null;if(request.headers.get('origin')==='https://hyosang-ryu.github.io')return null;const name=cookieName(request);const found=request.headers.get('cookie')?.split(';').map(v=>v.trim()).find(v=>v.startsWith(name+'='))?.slice(name.length+1);return found&&/^[a-f0-9]{64}$/.test(found)?found:null}
 function cookie(request:Request,value:string,maxAge=86400){return `${cookieName(request)}=${value}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${maxAge}${new URL(request.url).protocol==='https:'?'; Secure':''}`}
 export function validateEmail(value:unknown){if(typeof value!=='string'||value.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()))throw new AuthError(400,'이메일 주소를 확인해 주세요.');return value.trim().toLowerCase()}
 export function validatePassword(value:unknown){if(typeof value!=='string'||value.length<12||value.length>128)throw new AuthError(400,'비밀번호는 12~128자로 입력해 주세요.');return value}
@@ -40,6 +40,7 @@ async function setupOwner(db:D1Database,request:Request){
 export async function authRoute(db:D1Database,request:Request,path:string[],body:any):Promise<Response|null>{
  if(path[0]!=='auth')return null;
  const action=path[1],method=request.method,ip=request.headers.get('cf-connecting-ip')||'local';
+ if(action==='admin-setup'&&request.headers.get('origin')==='https://hyosang-ryu.github.io')throw new AuthError(403,'기존 서버 주소에서 최초 설정을 진행해 주세요.');
  if(action==='admin-setup'&&method==='GET'){
   const owner=await setupOwner(db,request);if(!owner)throw new AuthError(403,'기존 관리자 계정의 최초 비밀번호 설정 화면입니다.');
   const credential=await db.prepare('SELECT user_id FROM password_credentials WHERE user_id=?').bind(owner.id).first();

@@ -22,7 +22,6 @@ export async function handle(request:Request){
   response=new Response(null,{status:204,headers:{'Access-Control-Allow-Methods':'GET,POST,PATCH,PUT,DELETE,OPTIONS','Access-Control-Allow-Headers':allowed.join(', '),'Access-Control-Max-Age':'600'}});
  }else{
   // Pages may authenticate only with its session header. Never fall back to cookies.
-  if(external){const headers=new Headers(request.headers);headers.delete('cookie');request=new Request(request,{headers});}
   response=await handleInternal(request);
  }
  if(external){response.headers.set('Access-Control-Allow-Origin',origin!);response.headers.append('Vary','Origin');}
