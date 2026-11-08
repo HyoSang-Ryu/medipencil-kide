@@ -1,0 +1,30 @@
+/* Voice workspace typography: readable body, consistent controls and metadata. */
+body.staff[data-screen="12"] #app{font-size:16px;line-height:1.65}
+body.staff[data-screen="12"] #app h1{font-size:28px;line-height:1.35;letter-spacing:-.6px}
+body.staff[data-screen="12"] #app h2{font-size:21px;line-height:1.45;letter-spacing:-.35px}
+body.staff[data-screen="12"] #app h3{font-size:18px;line-height:1.5}
+body.staff[data-screen="12"] #app p{font-size:16px;line-height:1.65}
+body.staff[data-screen="12"] #app .head p,
+body.staff[data-screen="12"] #app .muted,
+body.staff[data-screen="12"] #app small,
+body.staff[data-screen="12"] #app .empty{font-size:14px;line-height:1.65}
+body.staff[data-screen="12"] #app label{font-size:14px;line-height:1.6}
+body.staff[data-screen="12"] #app label.check{font-size:15px;line-height:1.6;font-weight:500;align-items:flex-start}
+body.staff[data-screen="12"] #app input:not([type="checkbox"]),
+body.staff[data-screen="12"] #app select,
+body.staff[data-screen="12"] #app textarea{font-size:16px;line-height:1.6;font-weight:400}
+body.staff[data-screen="12"] #app .btn{font-size:15px;line-height:1.5;min-height:46px;padding:11px 18px}
+body.staff[data-screen="12"] #app .tag{font-size:13px;line-height:1.5;white-space:normal}
+body.staff[data-screen="12"] #app .kicker{font-size:12px;line-height:1.5;letter-spacing:1px}
+body.staff[data-screen="12"] #app summary{font-size:15px;line-height:1.6;font-weight:600}
+body.staff[data-screen="12"] #app .voice-history-item{font-family:inherit;font-size:15px;line-height:1.6}
+body.staff[data-screen="12"] #app .voice-history-item strong{font-size:16px}
+body.staff[data-screen="12"] #app .voice-history-item small{font-size:13px}
+body.staff[data-screen="12"] #app .voice-source{font-size:16px;line-height:1.75}
+body.staff[data-screen="12"] #app .form-error{font-size:14px;line-height:1.65}
+@media(max-width:540px){
+ body.staff[data-screen="12"] #app h1{font-size:26px}
+ body.staff[data-screen="12"] #app h2{font-size:20px}
+ body.staff[data-screen="12"] #app .voice-capture .actions{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+ body.staff[data-screen="12"] #app .voice-capture .actions .btn{width:100%;min-height:48px}
+}
