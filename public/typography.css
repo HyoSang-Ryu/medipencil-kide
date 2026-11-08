@@ -117,3 +117,5 @@ body.family[data-screen] #app .family-entry .care-entry-head .tag{font:var(--typ
 body:is(.staff,.family) #demo-bar,
 body:is(.staff,.family) #demo-bar>span:first-child{font:var(--type-label-sm)!important}
 body[data-screen]:is(.staff,.family) #app .vitals .vital>small{font:var(--type-label-sm)}
+/* Original _2 measurement values use headline-sm, distinct from text inputs. */
+body.staff[data-screen] #app .measurement input:not([type=range]):not([name=pulseNote]){font:var(--type-headline-sm)}

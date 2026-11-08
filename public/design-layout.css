@@ -1,0 +1,255 @@
+/* ZIP Serene Nordic Care geometry: space-sm=8, md=16, lg=24, xl=40;
+   staff _6 8/4 columns, _2 7/5, _3 3/5/4, _1 7/5. Family _4/_5/_8
+   use a 24px gutter; _9/_7 use 16px. Account strip is app-only (48/64px). */
+:root{--design-space-sm:8px;--design-space-md:16px;--design-space-lg:24px;--design-margin:32px;--design-card-radius:16px;--design-small-radius:12px}
+body.staff{--session-height:48px;--staff-sidebar-width:288px;--staff-header-height:64px}
+body.staff #demo-bar{height:var(--session-height);min-height:var(--session-height)!important;padding:8px 24px!important;gap:16px!important;box-sizing:border-box}
+body.staff #demo-bar a,body.staff #demo-bar button{min-height:32px;display:inline-flex;align-items:center}
+body.staff>aside{top:var(--session-height)!important;width:var(--staff-sidebar-width)!important;height:calc(100dvh - var(--session-height))!important;padding:24px 16px!important}
+body.staff>aside+div{padding-left:var(--staff-sidebar-width)!important}
+body.staff header{top:var(--session-height)!important;left:var(--staff-sidebar-width)!important;height:var(--staff-header-height)!important;padding:0 24px!important}
+body.staff>aside nav a{padding:12px 16px!important;min-height:48px;gap:8px!important;border-radius:12px}
+body.staff main{max-width:1680px;padding:64px 32px 96px!important}
+body[data-screen]:is(.staff,.family) #app .card>:first-child{margin-top:0}
+body[data-screen]:is(.staff,.family) #app .card>:last-child{margin-bottom:0}
+body.staff[data-screen] #app .card{border-radius:16px;padding:24px;margin-bottom:24px}
+body.staff[data-screen] #app .card-head{gap:16px;margin-bottom:16px}
+body.staff[data-screen] #app .stats{gap:16px;margin-bottom:24px;align-items:stretch}
+body.staff[data-screen] #app .staff-kpi{padding:20px;min-height:152px;border-radius:16px;display:flex;flex-direction:column}
+body.staff[data-screen] #app .staff-kpi>div{min-height:20px;padding-right:40px}
+body.staff[data-screen] #app .staff-kpi strong{margin-top:8px}
+body.staff[data-screen] #app .staff-kpi p{margin-top:auto;padding-top:8px}
+body.staff[data-screen="3"] #app .staff-kpi{padding:24px;min-height:112px}
+body.staff[data-screen] #app .staff-dashboard-grid{grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:24px;align-items:start}
+body.staff[data-screen] #app .ward-patient{padding:20px;margin-bottom:16px;border-radius:16px}
+body.staff[data-screen] #app .ward-patient-head{gap:12px}
+body.staff[data-screen] #app .ward-patient-head>.actions{gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap}
+body.staff[data-screen] #app .ward-patient-head .btn{padding:8px 16px;min-height:40px}
+body.staff[data-screen] #app .ward-patient .vitals{gap:12px;margin:8px 0;padding:12px 16px;border-radius:12px;background:var(--staff-soft)}
+body.staff[data-screen] #app .ward-patient .vital{padding:0;background:transparent}
+body.staff[data-screen] #app .ward-patient footer{padding-top:12px;gap:8px}
+body.staff[data-screen] #app .staff-sidepanels>.card{padding:24px;margin-bottom:24px}
+body.staff[data-screen] #app .staff-feed{padding:14px;margin-top:16px;border-radius:12px}
+body.staff[data-screen] #app .staff-feed .btn{margin-top:12px;min-height:40px;padding:8px 16px}
+body.staff[data-screen] #app .staff-patient-summary{padding:24px;gap:16px;border-radius:12px;grid-template-columns:80px minmax(0,1fr) minmax(224px,.65fr)}
+body.staff[data-screen] #app .staff-photo-wrap .patient-photo{width:80px;height:80px;border-radius:12px}
+body.staff[data-screen] #app .staff-patient-details h2{white-space:normal}
+body.staff[data-screen] #app .staff-recent{padding-left:16px;gap:8px}
+body.staff[data-screen] #app .staff-recent>div{padding:8px 16px;border-radius:12px}
+body.staff[data-screen] #app .staff-recent>a{min-height:40px;padding:8px 16px}
+body.staff[data-screen] #app .care-section-tabs{gap:4px;padding:6px;margin:0 0 24px;border-radius:12px;background:white;align-items:stretch}
+body.staff[data-screen] #app .care-section-tabs a{padding:10px 16px;border-radius:8px;gap:6px;min-height:44px;align-items:center}
+body.staff[data-screen] #app .staff-care-grid{grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px}
+body.staff[data-screen] #app .care-section{padding:24px;border-radius:12px;margin-bottom:24px;scroll-margin-top:136px}
+body.staff[data-screen] #app .staff-vital-fields{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+body.staff[data-screen] #app .staff-vital-fields>.measurement:last-child{grid-column:auto}
+body.staff[data-screen] #app .measurement{padding:16px;border-radius:12px;min-width:0}
+body.staff[data-screen] #app .measurement input{padding:6px 4px}
+body.staff[data-screen] #app .bp-inputs{gap:4px}
+body.staff[data-screen] #app .bp-inputs input{padding:6px 2px}
+body.staff[data-screen] #app .staff-care-fields{gap:16px}
+body.staff[data-screen] #app .meal-options{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+body.staff[data-screen] #app .meal-options label{margin:0}
+body.staff[data-screen] #app .staff-savebar{gap:16px;padding:16px 24px;bottom:16px;border-radius:16px;align-items:center}
+body.staff[data-screen] #app .staff-savebar>.actions{gap:12px;justify-content:flex-end;align-items:stretch}
+body.staff[data-screen] #app .staff-savebar .btn{padding:10px 24px;min-height:48px}
+body.staff[data-screen] #app .staff-communication-grid{grid-template-columns:minmax(192px,3fr) minmax(0,5fr) minmax(240px,4fr);gap:24px;align-items:start}
+body.staff[data-screen] #app .staff-communication-side{grid-column:auto;display:block}
+body.staff[data-screen] #app .staff-roster{padding:24px}
+body.staff[data-screen] #app .roster-patient{padding:16px;border-radius:12px;gap:8px;grid-template-columns:40px minmax(0,1fr)}
+body.staff[data-screen] #app .staff-roster [data-live=staff-roster]{display:block}
+body.staff[data-screen] #app .roster-patient .patient-photo.small{width:40px;height:40px}
+body.staff[data-screen] #app .staff-compose-column>.card,body.staff[data-screen] #app .staff-communication-side>.card{padding:24px}
+body.staff[data-screen] #app .family-card-preview{max-width:384px;margin:16px auto 0;padding:16px;border-width:12px;border-radius:24px}
+body.staff[data-screen] #app .staff-recipient{padding:16px;gap:8px;align-items:flex-start}
+body.staff[data-screen] #app .staff-report-grid{grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:16px;align-items:stretch}
+body.staff[data-screen] #app .report-bottom-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}
+body.staff[data-screen] #app .report-bottom-grid>.card:last-child{grid-column:auto}
+body.staff[data-screen] #app .report-bottom-grid>.card{height:100%;margin-bottom:0}
+body.staff[data-screen] #app .report-toolbar{gap:16px;margin-bottom:24px;align-items:end}
+body.staff[data-screen] #app .report-toolbar>.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+body.staff[data-screen] #app .report-note{padding:16px;border-radius:12px;margin-top:16px}
+body.staff[data-screen] #app .report-context{margin-bottom:16px;padding:8px 16px}
+body[data-screen]:is(.staff,.family) #app .actions{align-items:center;gap:8px;flex-wrap:wrap}
+body[data-screen]:is(.staff,.family) #app .btn{border-radius:9999px;gap:8px;min-height:48px;padding:12px 24px}
+/* Mobile source _9/_7: 16px outer gutter, _4/_5/_8: 24px. */
+body.family{--family-header-height:64px}
+body.family>header>div{height:64px!important;padding-left:24px;padding-right:24px}
+body.family main{padding-top:64px!important;padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))!important}
+body.family[data-screen] #app{padding:8px 16px 24px}
+body.family[data-screen="4"] #app,body.family[data-screen="5"] #app,body.family[data-screen="8"] #app{padding:16px 24px 24px}
+body.family[data-screen] #app .card{padding:24px;border-radius:12px;margin-bottom:16px}
+body.family[data-screen="5"] #app .card{margin-bottom:24px}
+body.family[data-screen] #app .card-head{gap:8px;margin-bottom:16px;align-items:flex-start}
+body.family[data-screen] #app .family-title{margin:0 4px 16px;gap:8px}
+body.family[data-screen] #app .family-patient{padding:24px}
+body.family[data-screen] #app .family-patient-top{grid-template-columns:48px minmax(0,1fr);gap:12px;align-items:start}
+body.family[data-screen] #app .family-patient-top>.tag{grid-column:2;justify-self:start;margin:0}
+body.family[data-screen] #app .family-portrait{grid-row:span 2}
+body.family[data-screen] #app .family-portrait .patient-photo{width:48px;height:48px}
+body.family[data-screen] #app .family-patient-info h2{margin:0}
+body.family[data-screen] #app .family-metrics{gap:10px;margin-top:16px}
+body.family[data-screen] #app .family-metrics>div{padding:12px 4px;gap:4px;border-radius:8px}
+body.family[data-screen] #app .compact-summary{padding:16px}
+body.family[data-screen] #app .care-story{padding:0;overflow:hidden}
+body.family[data-screen] #app .story-author{padding:16px;gap:8px;align-items:center}
+body.family[data-screen] #app .care-story blockquote{padding:16px;gap:8px}
+body.family[data-screen] #app .story-thumbnails{padding:16px 16px 0;gap:10px}
+body.family[data-screen] #app .story-reply{min-height:48px;padding:16px;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center}
+body.family[data-screen] #app .family-entry{padding:24px;gap:8px}
+body.family[data-screen] #app .care-entry-head{gap:8px;align-items:flex-start;flex-wrap:wrap}
+body.family[data-screen] #app .care-entry-head>div{min-width:120px}
+body.family[data-screen] #app .family-entry footer{gap:8px;padding:12px 0 0;margin-top:16px;flex-wrap:wrap}
+body.family[data-screen] #app .family-message-tabs{padding:4px;gap:4px;border-radius:9999px;margin-bottom:16px}
+body.family[data-screen] #app .family-message-tabs button{padding:10px 12px;min-height:48px;border-radius:9999px;gap:8px}
+body.family[data-screen="7"] #app .family-news-card{padding:16px}
+body.family[data-screen] #app .family-quick .actions{display:grid;grid-template-columns:1fr;gap:8px}
+body.family[data-screen] #app .family-quick .btn{width:100%;justify-content:center}
+body.family[data-screen] #app .profile-member,body.family[data-screen] #app .care-team-row{padding:16px 0;gap:12px}
+body.family[data-screen="5"] #app>.card:not(.family-patient){padding:16px}
+body.family[data-screen] #app .profile-link{padding:12px 0;min-height:48px}
+body.family[data-screen] #app .visit-heading{padding:0 0 16px;margin-bottom:16px;gap:8px}
+body.family[data-screen] #app .visit-summary{padding:16px}
+body.family[data-screen] #app .visit-summary .family-patient{padding:0;margin-bottom:16px}
+body.family[data-screen] #app .visit-types{margin-bottom:24px}
+body.family[data-screen] #app .visit-choice{padding:16px;gap:8px;border-radius:12px;min-height:96px;margin-bottom:8px;grid-template-columns:32px minmax(0,1fr) 24px}
+body.family[data-screen] #app .visit-date-fields{gap:16px}
+body.family[data-screen] #app form[data-form=booking]>.actions .btn{width:100%;min-height:56px}
+body.family>nav{min-height:calc(64px + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px)}
+body.family>nav a{min-height:48px}
+@media(min-width:1280px){
+ body.staff[data-screen] #app .ward-patient-head{grid-template-columns:40px minmax(0,1fr) auto;gap:12px}
+ body.staff[data-screen] #app .ward-patient-head .patient-photo.small{width:40px;height:40px}
+ body.staff[data-screen] #app .ward-patient-head>.actions{grid-column:auto;align-self:start;flex-wrap:nowrap}
+ body.staff[data-screen] #app .ward-patient-head .btn{white-space:nowrap;padding:8px 12px;gap:4px}
+}
+@media(min-width:801px) and (max-width:1279px){
+ body.staff{--staff-sidebar-width:248px}
+ body.staff[data-screen] #app .staff-dashboard-grid,body.staff[data-screen] #app .staff-care-grid,body.staff[data-screen] #app .staff-report-grid{grid-template-columns:minmax(0,1fr)}
+ body.staff[data-screen] #app .staff-sidepanels{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+ body.staff[data-screen] #app .staff-communication-grid{grid-template-columns:192px minmax(0,1fr)}
+ body.staff[data-screen] #app .staff-communication-side{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+ body.staff[data-screen] #app .staff-patient-summary{grid-template-columns:64px minmax(0,1fr)}
+ body.staff[data-screen] #app .staff-photo-wrap .patient-photo{width:64px;height:64px}
+ body.staff[data-screen] #app .staff-recent{grid-column:1/-1;padding:16px 0 0;border-left:0;border-top:1px solid #e6ebf0;grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.staff[data-screen] #app .report-bottom-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.staff[data-screen] #app .report-bottom-grid>.card:last-child{grid-column:1/-1}
+ body.staff[data-screen] #app .staff-savebar{flex-wrap:wrap}
+ body.staff[data-screen] #app .staff-savebar>.actions{width:100%;justify-content:flex-end}
+}
+@media(max-width:800px){
+ body.staff{--session-height:80px}
+ body.staff #demo-bar{height:auto;min-height:80px!important;padding:8px 16px!important;gap:0 12px!important;align-content:center}
+ body.staff #demo-bar>span:first-child{flex-basis:100%}
+ body.staff #demo-bar .session-role{flex-basis:auto}
+ body.staff #demo-bar #sync-time{display:none}
+ body.staff>aside{position:relative!important;top:auto!important;width:100%!important;height:auto!important;padding:16px!important}
+ body.staff>aside+div{padding-left:0!important}
+ body.staff>aside nav{gap:8px!important}
+ body.staff>aside nav a{padding:12px!important;min-height:48px}
+ body.staff header{position:relative!important;top:auto!important;left:auto!important;height:64px!important;padding:0 16px!important}
+ body.staff main{padding:16px 16px 96px!important}
+ body.staff[data-screen] #app .card{padding:24px;margin-bottom:24px}
+ body.staff[data-screen] #app .staff-dashboard-grid,body.staff[data-screen] #app .staff-care-grid,body.staff[data-screen] #app .staff-report-grid,body.staff[data-screen] #app .staff-communication-grid,body.staff[data-screen] #app .staff-communication-side,body.staff[data-screen] #app .staff-sidepanels,body.staff[data-screen] #app .report-bottom-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:24px}
+ body.staff[data-screen] #app .staff-communication-side,body.staff[data-screen] #app .report-bottom-grid>.card:last-child{grid-column:auto}
+ body.staff[data-screen] #app .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+ body.staff[data-screen] #app .staff-kpi{padding:16px;min-height:152px}
+ body.staff[data-screen] #app .staff-kpi>div{padding-right:0}
+ body.staff[data-screen] #app .staff-kpi>div>.material-symbols-outlined{position:static;float:right;margin:0 0 8px 8px}
+ body.staff[data-screen] #app .staff-kpi strong{clear:both}
+ body.staff[data-screen] #app .ward-patient{padding:20px;margin-bottom:16px}
+ body.staff[data-screen] #app .ward-patient-head{grid-template-columns:40px minmax(0,1fr);gap:12px}
+ body.staff[data-screen] #app .ward-patient-head>.actions{grid-column:1/-1;display:flex;justify-content:stretch;gap:8px}
+ body.staff[data-screen] #app .ward-patient-head>.actions .btn{flex:1 1 88px;padding:10px 12px;min-height:48px}
+ body.staff[data-screen] #app .ward-patient .vitals{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px;gap:12px}
+ body.staff[data-screen] #app .staff-patient-summary{grid-template-columns:48px minmax(0,1fr);gap:12px}
+ body.staff[data-screen] #app .staff-photo-wrap .patient-photo{width:48px;height:48px}
+ body.staff[data-screen] #app .staff-recent{grid-column:1/-1;border-left:0;border-top:1px solid #e6ebf0;padding:16px 0 0;gap:8px}
+ body.staff[data-screen] #app .staff-vital-fields{grid-template-columns:minmax(0,1fr)}
+ body.staff[data-screen] #app .meal-options{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.staff[data-screen] #app .staff-savebar{padding:16px;bottom:8px;gap:16px;align-items:stretch}
+ body.staff[data-screen] #app .staff-savebar>.actions{display:grid;grid-template-columns:1fr;width:100%;gap:8px}
+ body.staff[data-screen] #app .report-toolbar{gap:16px}
+ body.staff[data-screen] #app .report-toolbar>.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%}
+ body.staff[data-screen] #app .report-toolbar>.actions .btn{min-width:0;padding:12px}
+ body.staff[data-screen] #app .care-section-tabs{margin-bottom:24px}
+ body.staff[data-screen] #app .care-section,body.staff[data-screen] #app #care-activity,body.staff[data-screen] #app #staff-thread{scroll-margin-top:96px}
+ body.family>header{height:64px}
+ body.family main{padding-top:64px!important}
+ body.family[data-screen] #app .story-photo>img{height:208px}
+ body.family[data-screen] #app .entry-photo img{height:144px}
+ body.family[data-screen] #app .story-thumbnails img{height:128px}
+ body.family[data-screen] #app .visit-date-fields{grid-template-columns:1fr!important}
+ body.family[data-screen] #app .visit-date-fields label{padding:12px;margin:0}
+ body.family[data-screen] #app .visit-choice{min-height:112px}
+ body.family[data-screen] #app .activity-dialog{padding:16px;border-radius:12px}
+}
+@media(max-width:359px){
+ body.staff[data-screen] #app .stats{grid-template-columns:minmax(0,1fr)}
+ body.family[data-screen] #app .family-patient{padding:16px}
+ body.family[data-screen] #app .family-patient-top{column-gap:8px}
+ body.family[data-screen] #app .family-metrics{gap:8px}
+ body.family[data-screen] #app .family-metrics>div{padding:12px 2px}
+ body.family[data-screen] #app .family-message-tabs{border-radius:12px}
+ body.family[data-screen] #app .family-message-tabs button{padding:10px 8px;gap:4px}
+}
+@media print{body.staff main{padding:0!important}body.staff>aside+div{padding-left:0!important}}
+/* Retain the source's actual twelve-column spans, including internal gutters. */
+@media(min-width:1280px){
+ body.staff[data-screen] #app .staff-dashboard-grid,
+ body.staff[data-screen] #app .staff-care-grid,
+ body.staff[data-screen] #app .staff-communication-grid,
+ body.staff[data-screen] #app .staff-report-grid{grid-template-columns:repeat(12,minmax(0,1fr))}
+ body.staff[data-screen] #app .staff-dashboard-grid>div:first-child{grid-column:span 8}
+ body.staff[data-screen] #app .staff-dashboard-grid>.staff-sidepanels{grid-column:span 4}
+ body.staff[data-screen] #app .staff-care-grid>div:first-child{grid-column:span 7}
+ body.staff[data-screen] #app .staff-care-grid>.staff-sidepanels{grid-column:span 5}
+ body.staff[data-screen] #app .staff-communication-grid>.staff-roster{grid-column:span 3}
+ body.staff[data-screen] #app .staff-communication-grid>.staff-compose-column{grid-column:span 5}
+ body.staff[data-screen] #app .staff-communication-grid>.staff-communication-side{grid-column:span 4}
+ body.staff[data-screen] #app .staff-report-grid>.card:first-child{grid-column:span 7}
+ body.staff[data-screen] #app .staff-report-grid>.card:nth-child(2){grid-column:span 5}
+}
+body.staff[data-screen] #app .ward-search{flex:1 1 520px;min-width:0}
+body.staff[data-screen] #app .ward-search input{flex:1 1 240px;min-width:240px;max-width:none}
+@media(max-width:800px){body.staff[data-screen] #app .ward-search input{min-width:0;flex-basis:100%}}
+/* _9 quick actions: one primary row, then two secondary actions. */
+body.family[data-screen="9"] #app .family-quick{padding:0;border:0;background:transparent;box-shadow:none}
+body.family[data-screen="9"] #app .family-quick .actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+body.family[data-screen="9"] #app .family-quick .btn:first-child{grid-column:1/-1}
+body.family[data-screen="9"] #app .family-quick .btn:not(:first-child){padding:10px 12px;gap:6px;align-self:stretch}
+body.family[data-screen="8"] #app form[data-form=booking] button[type=submit]{width:100%;min-height:56px;margin-top:16px}
+/* _4 record cards have an edge-to-edge, softly tinted footer. */
+body.family[data-screen="4"] #app .family-entry>footer:last-child{margin:16px -24px -24px;padding:12px 24px;border-top:0;border-radius:0 0 12px 12px;background:#f3f3f780}
+body.staff[data-screen] #app :is(.staff-dashboard-grid,.staff-care-grid,.staff-communication-grid,.staff-report-grid)>*{min-width:0}
+/* Original staff KPI breakpoints: a single column on phones, two on tablets. */
+@media(max-width:767px){body.staff[data-screen] #app .stats{grid-template-columns:minmax(0,1fr)}}
+@media(min-width:768px) and (max-width:1023px){body.staff[data-screen] #app .stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:768px) and (max-width:800px){
+ body.staff[data-screen] #app .staff-vital-fields{grid-template-columns:repeat(3,minmax(0,1fr))}
+ body.staff[data-screen] #app .meal-options{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+/* Clear the old 1350px compact-header rule at the original desktop breakpoint. */
+@media(min-width:1280px){
+ body.staff[data-screen] #app .staff-patient-summary>.staff-recent{grid-column:3;grid-row:1;border-top:0;border-left:1px solid #e6ebf0;padding:0 0 0 16px}
+}
+body.staff[data-screen] #app .measurement .quick-values{display:flex;flex-wrap:nowrap;gap:4px}
+body.staff[data-screen] #app .measurement .quick-values .btn{flex:1 1 0;min-width:0;min-height:24px;padding:4px 2px;gap:0;border-radius:4px;white-space:nowrap}
+body.staff[data-screen] #app .measurement .pulse-field{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:8px;max-width:none}
+body.staff[data-screen] #app .measurement .pulse-field input{width:100%;margin:0}
+@media(max-width:800px){body.staff[data-screen] #app .measurement .quick-values .btn{min-height:44px}}
+/* _4 begins with the compact patient card; the shell already names this page. */
+body.family[data-screen="4"] #app .family-title{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+/* _8 places visit choices directly on the page, not inside a second padded card. */
+body.family[data-screen="8"] #app .grid2>section.card:has(form[data-form=booking]){padding:0;border:0;background:transparent;box-shadow:none}
+body.family[data-screen="8"] #app .visit-summary .family-patient-top{grid-template-columns:48px minmax(0,1fr) auto;gap:8px}
+body.family[data-screen="8"] #app .visit-summary .family-patient-top>.tag{grid-column:3;grid-row:1;align-self:start}
+body.family[data-screen="8"] #app .visit-summary .family-portrait{grid-row:1}
+@media(max-width:359px){
+ body.family[data-screen="8"] #app .visit-summary .family-patient-top{grid-template-columns:48px minmax(0,1fr)}
+ body.family[data-screen="8"] #app .visit-summary .family-patient-top>.tag{grid-column:2;grid-row:2}
+}
+/* _8's local title bar starts immediately below the shared header. */
+body.family[data-screen="8"] #app{padding-top:0}
+body.family[data-screen="8"] #app .visit-heading{position:sticky;top:calc(var(--family-session-height,36px) + 64px);z-index:35;min-height:60px;margin:0 -24px 16px;padding:8px 24px;border-bottom:0;background:#f9f9fdf5;box-shadow:0 1px 8px #0000000a}
+body.family[data-screen="8"] #app .visit-heading small{margin-top:0}
