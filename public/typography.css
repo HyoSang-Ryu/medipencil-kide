@@ -116,3 +116,4 @@ body.family[data-screen] #app .card-head>span,
 body.family[data-screen] #app .family-entry .care-entry-head .tag{font:var(--type-label-sm)}
 body:is(.staff,.family) #demo-bar,
 body:is(.staff,.family) #demo-bar>span:first-child{font:var(--type-label-sm)!important}
+body[data-screen]:is(.staff,.family) #app .vitals .vital>small{font:var(--type-label-sm)}
